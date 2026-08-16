@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Nostalgia Song BGMI — Relive the Old BGMI Vibes</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Listen to nostalgic and trending songs with an immersive BGMI-inspired visual experience." />
+  <meta name="keywords" content="BGMI, PUBG Mobile, Nostalgia Songs, Gaming Music, Erangel Sunset, Alan Walker, BGMI Songs" />
+  <meta name="theme-color" content="#07090e" />
+
+  <!-- Favicon (Circular) -->
+  <link rel="icon" href="./Assest/favicon_circle.png" type="image/png" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- App Viewport Container -->
+  <div id="appViewport">
+
+    <!-- Responsive Background Crossfader Layers -->
+    <div id="bgLayerA" class="bg-layer active"></div>
+    <div id="bgLayerB" class="bg-layer"></div>
+
+    <!-- Atmospheric Overlays & Grain -->
+    <div class="bg-overlay-vignette"></div>
+    <div class="bg-film-grain"></div>
+
+    <!-- Top Bar Controls -->
+    <header class="top-bar auto-fade-ui">
+      <!-- Clock: Left corner on desktop, top row on mobile -->
+      <div class="clock-left-wrapper" id="clockContainer">
+        <span id="clockDisplay" class="clock-text">00:00 AM</span>
+      </div>
+
+      <!-- Online Counter: Always centered -->
+      <div class="online-counter-center">
+        <div class="online-counter-badge" id="onlineCounterBadge">
+          <span class="green-dot"></span>
+          <span id="onlineCountText">319 people online</span>
+        </div>
+      </div>
+
+      <!-- Top Right Action Controls with Labels Underneath -->
+      <div class="top-actions">
+        <!-- 1. Suggestion Button + Label (Google Form) -->
+        <div class="top-action-item">
+          <a href="https://forms.gle/tQMowbzDxq2P4wwJA" target="_blank" rel="noopener noreferrer" class="icon-btn suggest-btn" aria-label="Suggestion Form" title="Suggestions & Feedback">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              <line x1="9" y1="9" x2="15" y2="9"></line>
+              <line x1="9" y1="13" x2="13" y2="13"></line>
+            </svg>
+          </a>
+          <span class="btn-label">Suggest</span>
+        </div>
+
+        <!-- 2. Support Button + Label -->
+        <div class="top-action-item">
+          <a href="https://rzp.io/rzp/EOJmxED6" target="_blank" rel="noopener noreferrer" class="icon-btn support-btn" aria-label="Support Us" title="Support Us (Donate)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+            </svg>
+          </a>
+          <span class="btn-label">Support</span>
+        </div>
+
+        <!-- 3. Volume Button + Label + Dropdown Card -->
+        <div class="top-action-item top-volume-dropdown-wrapper" id="topVolumeWrapper">
+          <button id="btnMute" class="icon-btn" aria-label="Mute Audio" title="Volume / Mute (M)">
+            <svg id="iconVolumeOn" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            <svg id="iconVolumeOff" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+              <path d="M9 9L5 13H2V11H5L9 7v2z"></path>
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            </svg>
+          </button>
+          <span class="btn-label">Volume</span>
+
+          <!-- Dropdown Slider Opening Underneath (Niche Side) -->
+          <div class="volume-dropdown-card" id="volumeDropdownCard">
+            <div class="volume-slider-box">
+              <input id="playerVolume" type="range" class="volume-slider" min="0" max="100" value="100" aria-label="Volume level" />
+              <div id="playerVolumeFill" class="volume-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Music Library Button + Label -->
+        <div class="top-action-item">
+          <button id="btnMusicLibrary" class="icon-btn" aria-label="Open Music Library" title="Open Music Library">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18V5l12-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+          </button>
+          <span class="btn-label">Music</span>
+        </div>
+
+        <!-- 5. Fullscreen Button + Label -->
+        <div class="top-action-item">
+          <button id="btnFullscreen" class="icon-btn" aria-label="Enter Fullscreen" title="Toggle Fullscreen (F)">
+            <svg id="iconFsEnter" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+            </svg>
+            <svg id="iconFsExit" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <span class="btn-label">Fullscreen</span>
+        </div>
+      </div>
+    </header>
+
+
+
+
+    <!-- Bottom Floating Music Player (Pill Style Matching Reference) -->
+    <section class="player-container auto-fade-ui" id="musicPlayer">
+
+      <!-- Waveform Visualizer — anchored to player top border -->
+      <div class="waveform-wrapper">
+        <canvas id="waveformCanvas"></canvas>
+      </div>
+
+      <div class="player-top-row">
+        
+        <!-- Track Thumbnail & Details -->
+        <div class="song-info-card">
+          <img id="playerCover" class="player-cover" src="./Assest/Season 6 On My Way Desktop.jpg" alt="Track Artwork" />
+          <div class="player-text-group">
+            <h2 id="playerTitle" class="player-title">On My Way (Season 6)</h2>
+            <span id="playerArtist" class="player-artist">Alan Walker x Sabrina Carpenter x PUBG</span>
+            <div class="player-tags-row">
+              <span id="playerTag" class="player-tag-pill">SEASON 6 ANTHEM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clean Playback Controls (Prev, Play/Pause, Next) -->
+        <div class="player-controls">
+          <!-- Previous Song Button -->
+          <button id="btnPrev" class="ctrl-btn" aria-label="Previous Song" title="Previous Song (P)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="19 20 9 12 19 4 19 20"></polygon>
+              <line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"></line>
+            </svg>
+          </button>
+
+          <!-- Play / Pause Main Button -->
+          <button id="btnPlayPause" class="play-pause-btn" aria-label="Play song" title="Play / Pause (Space)">
+            <svg id="iconPlay" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <svg id="iconPause" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+              <rect x="6" y="4" width="4" height="16"></rect>
+              <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+          </button>
+
+          <!-- Next Song Button -->
+          <button id="btnNext" class="ctrl-btn" aria-label="Next Song" title="Next Song (N)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 4 15 12 5 20 5 4"></polygon>
+              <line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Seek Progress Row (Exact Match to Reference Screenshot) -->
+      <div class="player-progress-group">
+        <span class="time-stamp" id="timeCombined">0:00 / 0:00</span>
+        
+        <div class="progress-track-wrapper">
+          <input id="playerProgress" type="range" class="seek-slider" min="0" max="100" value="0" step="0.1" aria-label="Seek track position" />
+          <div id="playerProgressFill" class="progress-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Music Library Drawer Component -->
+    <div id="drawerOverlay" class="drawer-overlay"></div>
+    <aside id="musicDrawer" class="music-drawer" aria-label="Music Library">
+      <div class="drawer-header">
+        <h2 class="drawer-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18V5l12-2v13"></path>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="18" cy="16" r="3"></circle>
+          </svg>
+          MUSIC LIBRARY
+        </h2>
+        <button id="btnCloseDrawer" class="icon-btn" aria-label="Close Music Library">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="drawer-body">
+        <!-- Search Input -->
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input id="songSearchInput" type="text" class="search-input" placeholder="Search BGMI songs, themes, artists..." />
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div id="categoryFilters" class="category-filters">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Song Cards Container -->
+        <div id="songList" class="song-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="toast"></div>
+
+
+
+  </div>
+
+  <!-- JavaScript Scripts -->
+  <script src="js/songs-data.js"></script>
+  <script src="js/clock.js"></script>
+  <script src="js/fullscreen.js"></script>
+  <script src="js/library.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/waveform.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
