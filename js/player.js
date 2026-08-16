@@ -115,9 +115,44 @@ class AudioPlayer {
       });
     }
 
-    // Initial track load without auto-start
+    // ── Restore last played song from localStorage ──
+    const savedIndex = parseInt(localStorage.getItem('bgmi_song_index') || '0', 10);
+    const startIndex = (savedIndex >= 0 && savedIndex < this.songs.length) ? savedIndex : 0;
+
     if (this.songs.length > 0) {
-      this.loadTrack(0, false);
+      this.loadTrack(startIndex, false); // load without autoplay first
+    }
+
+    // ── Autoplay: try immediately, fall back to first user interaction ──
+    this._attemptAutoplay();
+  }
+
+  _attemptAutoplay() {
+    // Try silent autoplay
+    this.audio.volume = this.audio.volume; // no-op to avoid lint
+    const p = this.audio.play();
+    if (p !== undefined) {
+      p.then(() => {
+        // Autoplay succeeded
+        this.hasUserInteracted = true;
+        this.updatePlayStateUI(true);
+        this.onStateChange(this.getCurrentSong(), true);
+      }).catch(() => {
+        // Autoplay blocked by browser — play on first user click/touch anywhere
+        this.updatePlayStateUI(false);
+        const startOnInteract = () => {
+          if (this.audio.paused) {
+            this.hasUserInteracted = true;
+            this.play();
+          }
+          document.removeEventListener('click', startOnInteract);
+          document.removeEventListener('touchend', startOnInteract);
+          document.removeEventListener('keydown', startOnInteract);
+        };
+        document.addEventListener('click', startOnInteract, { once: true });
+        document.addEventListener('touchend', startOnInteract, { once: true });
+        document.addEventListener('keydown', startOnInteract, { once: true });
+      });
     }
   }
 
@@ -130,6 +165,9 @@ class AudioPlayer {
     
     this.currentIndex = index;
     const song = this.songs[index];
+
+    // ── Save current song index to localStorage ──
+    localStorage.setItem('bgmi_song_index', index);
 
     this.audio.src = song.audio;
     this.audio.load();
