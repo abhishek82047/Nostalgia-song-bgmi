@@ -128,30 +128,40 @@ class AudioPlayer {
   }
 
   _attemptAutoplay() {
-    // Try silent autoplay
-    this.audio.volume = this.audio.volume; // no-op to avoid lint
+    // Step 1: Mute and play (browsers ALWAYS allow muted autoplay)
+    this.audio.muted = true;
+    this.hasUserInteracted = true;
+
     const p = this.audio.play();
     if (p !== undefined) {
       p.then(() => {
-        // Autoplay succeeded
-        this.hasUserInteracted = true;
+        // Playing muted — now update UI as playing
         this.updatePlayStateUI(true);
         this.onStateChange(this.getCurrentSong(), true);
+
+        // Step 2: Unmute on first user interaction
+        const unmute = () => {
+          this.audio.muted = false;
+          document.removeEventListener('click',    unmute);
+          document.removeEventListener('touchend', unmute);
+          document.removeEventListener('keydown',  unmute);
+        };
+        document.addEventListener('click',    unmute, { once: true });
+        document.addEventListener('touchend', unmute, { once: true });
+        document.addEventListener('keydown',  unmute, { once: true });
+
       }).catch(() => {
-        // Autoplay blocked by browser — play on first user click/touch anywhere
+        // Even muted play failed (very rare) — try on first interaction
+        this.audio.muted = false;
         this.updatePlayStateUI(false);
         const startOnInteract = () => {
-          if (this.audio.paused) {
-            this.hasUserInteracted = true;
-            this.play();
-          }
-          document.removeEventListener('click', startOnInteract);
-          document.removeEventListener('touchend', startOnInteract);
-          document.removeEventListener('keydown', startOnInteract);
+          this.hasUserInteracted = true;
+          this.audio.muted = false;
+          this.play();
         };
-        document.addEventListener('click', startOnInteract, { once: true });
+        document.addEventListener('click',    startOnInteract, { once: true });
         document.addEventListener('touchend', startOnInteract, { once: true });
-        document.addEventListener('keydown', startOnInteract, { once: true });
+        document.addEventListener('keydown',  startOnInteract, { once: true });
       });
     }
   }
