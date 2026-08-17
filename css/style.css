@@ -1243,6 +1243,12 @@ input {
 
 /* Mobile & Small Screens (<= 850px) */
 @media (max-width: 850px) {
+  /* Use dynamic viewport height so bg fills actual visible area */
+  #appViewport {
+    height: 100dvh;
+    height: 100vh; /* fallback for older browsers */
+  }
+
   .center-hero {
     top: 30%;
   }
@@ -1300,8 +1306,11 @@ input {
   }
 
   .player-container {
-    /* Push above browser bottom nav bar (chrome/brave ~56px + safe area) */
-    bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+    /* Fixed positioning = relative to actual visible viewport, not 100vh */
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
+    left: 50%;
+    transform: translateX(-50%);
     width: calc(100% - 1.4rem);
     max-width: 480px;
     padding: 0.55rem 0.8rem 0.55rem 0.55rem;
@@ -1311,11 +1320,20 @@ input {
     -webkit-backdrop-filter: blur(32px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.10);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+    z-index: 100;
   }
 
   .waveform-wrapper {
+    position: fixed; /* must also be fixed to follow the fixed player */
     height: 42px;
-    top: -46px;
+    top: auto;       /* override desktop top:-62px */
+    /* Dynamically positioned via JS — fallback below */
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem + 66px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 1.4rem);
+    max-width: 480px;
+    z-index: 99;
   }
 
   .player-top-row {
