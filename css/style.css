@@ -1307,10 +1307,10 @@ input {
 
   .player-container {
     position: fixed;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem + 1px); /* +1px up */
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem + 1.5px);
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - 1.4rem - 6px); /* 3px narrower each side */
+    width: calc(100% - 1.4rem - 10px); /* 5px less on each side */
     max-width: 480px;
     padding: 0.55rem 0.8rem 0.55rem 0.55rem;
     border-radius: 60px;
@@ -1326,10 +1326,10 @@ input {
     position: fixed;
     height: 40px;
     top: auto;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem + 1px + 78px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem + 79.5px); /* 78 + 1.5px player shift */
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - 1.4rem - 6px); /* match player width */
+    width: calc(100% - 1.4rem - 10px); /* match player width */
     max-width: 480px;
     z-index: 99;
   }
