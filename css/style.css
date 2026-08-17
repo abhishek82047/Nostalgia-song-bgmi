@@ -1327,8 +1327,7 @@ input {
     position: fixed;
     height: 40px;
     top: auto;
-    /* player bottom(1rem) + player height(~112px) = sits exactly on top border */
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem + 112px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem + 76px);
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 1.4rem);
