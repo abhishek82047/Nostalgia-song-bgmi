@@ -257,4 +257,23 @@ document.addEventListener('DOMContentLoaded', () => {
     player.togglePlay();
     syncLsPlayIcon();
   });
+
+  // Exit button — try locking back to portrait, else hide the overlay
+  const lsBtnExit = document.getElementById('lsBtnExit');
+  if (lsBtnExit) {
+    lsBtnExit.addEventListener('click', () => {
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('portrait').catch(() => {
+          // If lock fails (not supported), just hide overlay temporarily
+          document.getElementById('landscapeView').style.display = 'none';
+          setTimeout(() => {
+            document.getElementById('landscapeView').style.display = '';
+          }, 500);
+        });
+      } else {
+        // Fallback: show a toast asking user to rotate phone
+        showToast('Please rotate your device to portrait');
+      }
+    });
+  }
 });

@@ -1437,25 +1437,21 @@ input {
    Shown ONLY when mobile device rotates to landscape
    ========================================================================== */
 
-/* Hidden by default on all screens */
-.landscape-view {
-  display: none;
-}
+/* Hidden by default */
+.landscape-view { display: none; }
+.ls-glass-bg    { display: none; }
+.ls-exit-btn    { display: none; }
 
-/* ── Activate in landscape on small screens ── */
+/* ── Activate in landscape on mobile ── */
 @media (orientation: landscape) and (max-height: 500px) {
 
-  /* Hide the normal UI */
-  .top-bar,
-  .center-hero,
-  .player-container,
-  .waveform-wrapper,
-  #drawerOverlay,
-  .toast {
+  /* Hide normal UI */
+  .top-bar, .center-hero, .player-container,
+  .waveform-wrapper, #drawerOverlay, .toast {
     display: none !important;
   }
 
-  /* Show AOD overlay */
+  /* ── Outer wrapper ── */
   .landscape-view {
     display: flex;
     position: fixed;
@@ -1464,98 +1460,134 @@ input {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(6, 8, 14, 0.72);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 12px)
-             env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 12px);
-    gap: 0.4rem;
+    gap: 0.5rem;
+    overflow: hidden;
+    /* No solid bg — glass layer handles it */
+    background: transparent;
   }
 
-  /* Big clock — center hero */
+  /* ── Frosted glass background layer ── */
+  .ls-glass-bg {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 12, 20, 0.45);
+    backdrop-filter: blur(28px) saturate(170%);
+    -webkit-backdrop-filter: blur(28px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 0;
+  }
+
+  /* all children above glass bg */
+  .landscape-view > * { position: relative; z-index: 1; }
+
+  /* ── Exit button — top right ── */
+  .ls-exit-btn {
+    display: flex;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    z-index: 2;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .ls-exit-btn:hover, .ls-exit-btn:active {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    transform: scale(1.1);
+  }
+
+  /* ── Big clock ── */
   .ls-clock {
     font-family: 'Rajdhani', 'Outfit', sans-serif;
-    font-size: clamp(3.5rem, 14vw, 6rem);
+    font-size: clamp(3.2rem, 13vw, 5.5rem);
     font-weight: 700;
     color: #ffffff;
     letter-spacing: 4px;
-    text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    text-shadow: 0 0 40px rgba(255,255,255,0.25);
     line-height: 1;
     text-align: center;
+    margin-top: 0.5rem;
   }
 
-  /* Song title + artist below clock */
+  /* ── Song info ── */
   .ls-song-info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.15rem;
-    margin-top: 0.3rem;
+    gap: 0.1rem;
+    margin-top: 0.2rem;
   }
-
   .ls-song-info #lsSongTitle {
-    font-family: 'Outfit', sans-serif;
-    font-size: clamp(0.85rem, 3vw, 1.1rem);
-    color: rgba(255, 255, 255, 0.85);
+    font-size: clamp(0.8rem, 2.8vw, 1rem);
+    color: rgba(255,255,255,0.88);
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 70vw;
+    max-width: 65vw;
   }
-
   .ls-song-info #lsSongArtist {
-    font-size: clamp(0.7rem, 2.2vw, 0.9rem);
-    color: rgba(255, 255, 255, 0.5);
+    font-size: clamp(0.65rem, 2vw, 0.85rem);
+    color: rgba(255,255,255,0.5);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 70vw;
+    max-width: 65vw;
   }
 
-  /* Controls row — prev / play / next */
+  /* ── Controls row ── */
   .ls-controls {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
-    margin-top: 1rem;
+    gap: 1.8rem;
+    margin-top: 0.9rem;
   }
 
+  /* Prev / Next buttons */
   .ls-ctrl-btn {
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255,255,255,0.82);
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
     transition: all 0.15s ease;
     cursor: pointer;
   }
-
-  .ls-ctrl-btn:hover,
-  .ls-ctrl-btn:active {
-    background: rgba(255, 255, 255, 0.18);
+  .ls-ctrl-btn:hover, .ls-ctrl-btn:active {
+    background: rgba(255,255,255,0.2);
     color: #fff;
     transform: scale(1.08);
   }
 
-  /* White play button */
+  /* Play/Pause — white circle, dark #111 icon inside */
   .ls-play-btn {
-    width: 64px;
-    height: 64px;
+    width: 62px;
+    height: 62px;
     background: #ffffff;
-    color: #111;
+    color: #111111;  /* icon inherits this */
     border: none;
-    box-shadow: 0 4px 24px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 20px rgba(255,255,255,0.28);
   }
-
-  .ls-play-btn:hover,
-  .ls-play-btn:active {
-    background: #f0f0f0;
+  .ls-play-btn svg {
+    fill: #111111 !important; /* force dark icon on white bg */
+  }
+  .ls-play-btn:hover, .ls-play-btn:active {
+    background: #ebebeb;
     transform: scale(1.08);
   }
 }
+/* end */

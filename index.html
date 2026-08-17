@@ -29,31 +29,63 @@
     <div class="bg-overlay-vignette"></div>
     <div class="bg-film-grain"></div>
 
-    <!-- ═══ Landscape / Fullscreen AOD View ═══
-         Shown only in landscape on mobile.
-         Large clock center + minimal controls bottom. -->
+    <!-- ═══ Landscape / Fullscreen AOD View ═══ -->
     <div id="landscapeView" class="landscape-view">
+
+      <!-- Glass background layer -->
+      <div class="ls-glass-bg"></div>
+
+      <!-- Exit button: top-right -->
+      <button class="ls-exit-btn" id="lsBtnExit" aria-label="Exit landscape view">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
       <!-- Big clock -->
       <div class="ls-clock" id="lsClockDisplay">00:00 AM</div>
+
       <!-- Song info -->
       <div class="ls-song-info">
         <span id="lsSongTitle">Loading…</span>
         <span id="lsSongArtist"></span>
       </div>
-      <!-- Minimal controls -->
+
+      <!-- Controls: Prev · Play/Pause · Next -->
       <div class="ls-controls">
-        <button class="ls-ctrl-btn" id="lsBtnPrev" aria-label="Previous">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+
+        <!-- Previous -->
+        <button class="ls-ctrl-btn" id="lsBtnPrev" aria-label="Previous track">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="19 20 9 12 19 4 19 20"/>
+            <rect x="4" y="4" width="3" height="16" rx="1"/>
+          </svg>
         </button>
+
+        <!-- Play / Pause — white circle, dark icon -->
         <button class="ls-ctrl-btn ls-play-btn" id="lsBtnPlay" aria-label="Play/Pause">
-          <svg id="lsIconPlay" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          <svg id="lsIconPause" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          <!-- Play icon (dark, shown when paused) -->
+          <svg id="lsIconPlay" width="30" height="30" viewBox="0 0 24 24" fill="#111111">
+            <polygon points="6 3 20 12 6 21 6 3"/>
+          </svg>
+          <!-- Pause icon (dark, shown when playing) -->
+          <svg id="lsIconPause" width="30" height="30" viewBox="0 0 24 24" fill="#111111" style="display:none">
+            <rect x="5" y="3" width="5" height="18" rx="2"/>
+            <rect x="14" y="3" width="5" height="18" rx="2"/>
+          </svg>
         </button>
-        <button class="ls-ctrl-btn" id="lsBtnNext" aria-label="Next">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+
+        <!-- Next -->
+        <button class="ls-ctrl-btn" id="lsBtnNext" aria-label="Next track">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 4 15 12 5 20 5 4"/>
+            <rect x="17" y="4" width="3" height="16" rx="1"/>
+          </svg>
         </button>
+
       </div>
     </div>
+
 
     <!-- Top Bar Controls -->
     <header class="top-bar auto-fade-ui">
