@@ -194,46 +194,11 @@ class AudioPlayer {
     // Notify listeners (for background image sync etc)
     this.onTrackChange(song);
 
-    // ── Update native browser Media Session notification ──
-    this._updateMediaSession(song);
-
     if (autoPlay && this.hasUserInteracted) {
       this.play();
     } else {
       this.updatePlayStateUI(false);
     }
-  }
-
-  // ── Media Session API: shows native OS/browser music notification ──
-  _updateMediaSession(song) {
-    if (!('mediaSession' in navigator)) return;
-
-    // Build absolute artwork URL
-    const origin = location.origin + location.pathname.replace(/\/[^/]*$/, '/');
-    const artUrl = song.cover.startsWith('http') ? song.cover : origin + song.cover.replace(/^\.?\//, '');
-
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title:  song.title,
-      artist: song.artist,
-      album:  'BGMI Nostalgia Vibes',
-      artwork: [
-        { src: artUrl, sizes: '96x96',   type: 'image/jpeg' },
-        { src: artUrl, sizes: '128x128', type: 'image/jpeg' },
-        { src: artUrl, sizes: '256x256', type: 'image/jpeg' },
-        { src: artUrl, sizes: '512x512', type: 'image/jpeg' },
-      ]
-    });
-
-    // Wire hardware/notification buttons
-    navigator.mediaSession.setActionHandler('play',          () => this.play());
-    navigator.mediaSession.setActionHandler('pause',         () => this.pause());
-    navigator.mediaSession.setActionHandler('previoustrack', () => this.playPrev());
-    navigator.mediaSession.setActionHandler('nexttrack',     () => this.playNext());
-    navigator.mediaSession.setActionHandler('seekto', (details) => {
-      if (details.seekTime !== undefined && this.audio.duration) {
-        this.audio.currentTime = details.seekTime;
-      }
-    });
   }
 
   play() {
@@ -244,10 +209,6 @@ class AudioPlayer {
         .then(() => {
           this.updatePlayStateUI(true);
           this.onStateChange(this.getCurrentSong(), true);
-          // Update OS notification state
-          if ('mediaSession' in navigator) {
-            navigator.mediaSession.playbackState = 'playing';
-          }
         })
         .catch(err => {
           console.warn("Audio play prevented:", err);
@@ -261,10 +222,6 @@ class AudioPlayer {
     this.audio.pause();
     this.updatePlayStateUI(false);
     this.onStateChange(this.getCurrentSong(), false);
-    // Update OS notification state
-    if ('mediaSession' in navigator) {
-      navigator.mediaSession.playbackState = 'paused';
-    }
   }
 
   togglePlay() {
