@@ -207,33 +207,41 @@ class AudioPlayer {
   updateMediaSession(song) {
     if (!('mediaSession' in navigator)) return;
 
-    // Build absolute URL for artwork (relative paths don't work in notifications)
-    const origin = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
+    // Build absolute artwork URL (relative paths fail in OS notifications)
+    const base = window.location.href.replace(/\/[^\/]*$/, '/');
     const artworkUrl = song.cover.startsWith('http')
       ? song.cover
-      : origin + song.cover.replace(/^\.?\//, '');
+      : base + song.cover.replace(/^\.?\//, '');
+
+    // Detect correct MIME type from extension
+    const ext = artworkUrl.split('.').pop().toLowerCase();
+    const mimeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
+    const mimeType = mimeMap[ext] || 'image/jpeg';
 
     navigator.mediaSession.metadata = new MediaMetadata({
       title:  song.title,
       artist: song.artist,
-      album:  'BGMI Nostalgia',
+      album:  'BGMI Nostalgia Vibes',
       artwork: [
-        { src: artworkUrl, sizes: '512x512', type: 'image/jpeg' },
-        { src: artworkUrl, sizes: '256x256', type: 'image/jpeg' },
-        { src: artworkUrl, sizes: '128x128', type: 'image/jpeg' },
+        { src: artworkUrl, sizes: '96x96',   type: mimeType },
+        { src: artworkUrl, sizes: '128x128', type: mimeType },
+        { src: artworkUrl, sizes: '256x256', type: mimeType },
+        { src: artworkUrl, sizes: '512x512', type: mimeType },
       ]
     });
 
-    // Register media control button handlers
-    navigator.mediaSession.setActionHandler('play',          () => this.play());
-    navigator.mediaSession.setActionHandler('pause',         () => this.pause());
-    navigator.mediaSession.setActionHandler('previoustrack', () => this.playPrev());
-    navigator.mediaSession.setActionHandler('nexttrack',     () => this.playNext());
-    navigator.mediaSession.setActionHandler('seekto', (details) => {
-      if (details.seekTime !== undefined && this.audio.duration) {
-        this.audio.currentTime = details.seekTime;
-      }
-    });
+    // Action handlers (safe to set multiple times)
+    try {
+      navigator.mediaSession.setActionHandler('play',          () => this.play());
+      navigator.mediaSession.setActionHandler('pause',         () => this.pause());
+      navigator.mediaSession.setActionHandler('previoustrack', () => this.playPrev());
+      navigator.mediaSession.setActionHandler('nexttrack',     () => this.playNext());
+      navigator.mediaSession.setActionHandler('seekto', (d) => {
+        if (d.seekTime !== undefined && this.audio.duration) {
+          this.audio.currentTime = d.seekTime;
+        }
+      });
+    } catch(e) {}
   }
 
   play() {
@@ -244,6 +252,10 @@ class AudioPlayer {
         .then(() => {
           this.updatePlayStateUI(true);
           this.onStateChange(this.getCurrentSong(), true);
+          // Tell OS we are playing
+          if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = 'playing';
+          }
         })
         .catch(err => {
           console.warn("Audio play prevented:", err);
@@ -257,6 +269,10 @@ class AudioPlayer {
     this.audio.pause();
     this.updatePlayStateUI(false);
     this.onStateChange(this.getCurrentSong(), false);
+    // Tell OS we are paused
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = 'paused';
+    }
   }
 
   togglePlay() {
