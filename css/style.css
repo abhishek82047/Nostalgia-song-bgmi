@@ -1324,11 +1324,11 @@ input {
   }
 
   .waveform-wrapper {
-    position: fixed; /* must also be fixed to follow the fixed player */
-    height: 42px;
-    top: auto;       /* override desktop top:-62px */
-    /* Dynamically positioned via JS — fallback below */
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem + 66px);
+    position: fixed;
+    height: 40px;
+    top: auto;
+    /* player bottom(1rem) + player height(~112px) = sits exactly on top border */
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem + 112px);
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 1.4rem);
