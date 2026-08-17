@@ -264,16 +264,79 @@ document.addEventListener('DOMContentLoaded', () => {
     lsBtnExit.addEventListener('click', () => {
       if (screen.orientation && screen.orientation.lock) {
         screen.orientation.lock('portrait').catch(() => {
-          // If lock fails (not supported), just hide overlay temporarily
           document.getElementById('landscapeView').style.display = 'none';
           setTimeout(() => {
             document.getElementById('landscapeView').style.display = '';
           }, 500);
         });
       } else {
-        // Fallback: show a toast asking user to rotate phone
         showToast('Please rotate your device to portrait');
       }
     });
   }
+
+  // ══════════════════════════════════════════════════════
+  //   Double Click / Double Tap 10s Seek (Left = -10s, Right = +10s)
+  //   Works seamlessly in both Portrait and Landscape modes
+  // ══════════════════════════════════════════════════════
+  const seekRippleLeft  = document.getElementById('seekRippleLeft');
+  const seekRippleRight = document.getElementById('seekRippleRight');
+
+  function triggerSeek(direction, clientX) {
+    if (direction === 'left' || clientX < window.innerWidth / 2) {
+      player.seekBy(-10);
+      showToast('⏪ -10s Rewind');
+      if (seekRippleLeft) {
+        seekRippleLeft.classList.remove('active');
+        void seekRippleLeft.offsetWidth; // trigger reflow
+        seekRippleLeft.classList.add('active');
+        setTimeout(() => seekRippleLeft.classList.remove('active'), 650);
+      }
+    } else {
+      player.seekBy(10);
+      showToast('⏩ +10s Forward');
+      if (seekRippleRight) {
+        seekRippleRight.classList.remove('active');
+        void seekRippleRight.offsetWidth; // trigger reflow
+        seekRippleRight.classList.add('active');
+        setTimeout(() => seekRippleRight.classList.remove('active'), 650);
+      }
+    }
+  }
+
+  function isInteractive(target) {
+    if (!target || !target.closest) return false;
+    return !!target.closest('button, a, input, select, textarea, .volume-dropdown-card, .music-drawer, .icon-btn, .ctrl-btn, .ls-ctrl-btn, .ls-exit-btn, .seek-slider, .cat-pill, .song-card');
+  }
+
+  // 1. Mouse Double Click (Desktop & Laptop)
+  window.addEventListener('dblclick', (e) => {
+    if (isInteractive(e.target)) return;
+    triggerSeek(e.clientX < window.innerWidth / 2 ? 'left' : 'right', e.clientX);
+  });
+
+  // 2. Touch Double Tap (Mobile & Tablet - Portrait & Landscape)
+  let lastTapTime = 0;
+  let lastTapX = 0;
+  let lastTapY = 0;
+
+  window.addEventListener('touchend', (e) => {
+    if (!e.changedTouches || e.changedTouches.length === 0) return;
+    const touch = e.changedTouches[0];
+    const now = Date.now();
+    const timeDiff = now - lastTapTime;
+    const dist = Math.hypot(touch.clientX - lastTapX, touch.clientY - lastTapY);
+
+    if (timeDiff > 40 && timeDiff < 350 && dist < 45) {
+      // Double tap detected!
+      if (!isInteractive(e.target)) {
+        triggerSeek(touch.clientX < window.innerWidth / 2 ? 'left' : 'right', touch.clientX);
+      }
+      lastTapTime = 0;
+    } else {
+      lastTapTime = now;
+      lastTapX = touch.clientX;
+      lastTapY = touch.clientY;
+    }
+  }, { passive: true });
 });

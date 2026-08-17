@@ -290,7 +290,21 @@
     <!-- Toast Notification -->
     <div id="toastNotification" class="toast"></div>
 
-
+    <!-- Double Click / Tap 10s Seek Feedback Animation Overlay -->
+    <div id="seekFeedback" class="seek-feedback-overlay">
+      <div class="seek-ripple left" id="seekRippleLeft">
+        <div class="seek-ripple-content">
+          <svg width="28" height="28" viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+          <span>-10s</span>
+        </div>
+      </div>
+      <div class="seek-ripple right" id="seekRippleRight">
+        <div class="seek-ripple-content">
+          <svg width="28" height="28" viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+          <span>+10s</span>
+        </div>
+      </div>
+    </div>
 
   </div>
 
