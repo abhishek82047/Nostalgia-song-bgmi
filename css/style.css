@@ -1431,3 +1431,131 @@ input {
     transform: translateY(0);
   }
 }
+
+/* ==========================================================================
+   Landscape / Fullscreen AOD View
+   Shown ONLY when mobile device rotates to landscape
+   ========================================================================== */
+
+/* Hidden by default on all screens */
+.landscape-view {
+  display: none;
+}
+
+/* ── Activate in landscape on small screens ── */
+@media (orientation: landscape) and (max-height: 500px) {
+
+  /* Hide the normal UI */
+  .top-bar,
+  .center-hero,
+  .player-container,
+  .waveform-wrapper,
+  #drawerOverlay,
+  .toast {
+    display: none !important;
+  }
+
+  /* Show AOD overlay */
+  .landscape-view {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(6, 8, 14, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 12px)
+             env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 12px);
+    gap: 0.4rem;
+  }
+
+  /* Big clock — center hero */
+  .ls-clock {
+    font-family: 'Rajdhani', 'Outfit', sans-serif;
+    font-size: clamp(3.5rem, 14vw, 6rem);
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 4px;
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    line-height: 1;
+    text-align: center;
+  }
+
+  /* Song title + artist below clock */
+  .ls-song-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    margin-top: 0.3rem;
+  }
+
+  .ls-song-info #lsSongTitle {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(0.85rem, 3vw, 1.1rem);
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70vw;
+  }
+
+  .ls-song-info #lsSongArtist {
+    font-size: clamp(0.7rem, 2.2vw, 0.9rem);
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70vw;
+  }
+
+  /* Controls row — prev / play / next */
+  .ls-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  .ls-ctrl-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+
+  .ls-ctrl-btn:hover,
+  .ls-ctrl-btn:active {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    transform: scale(1.08);
+  }
+
+  /* White play button */
+  .ls-play-btn {
+    width: 64px;
+    height: 64px;
+    background: #ffffff;
+    color: #111;
+    border: none;
+    box-shadow: 0 4px 24px rgba(255, 255, 255, 0.3);
+  }
+
+  .ls-play-btn:hover,
+  .ls-play-btn:active {
+    background: #f0f0f0;
+    transform: scale(1.08);
+  }
+}

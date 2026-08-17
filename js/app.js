@@ -199,4 +199,62 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBackground(currentSong);
     updateCenterTypography(currentSong);
   }
+
+  // ══════════════════════════════════════════════════════
+  //   Landscape AOD View — clock sync + controls
+  // ══════════════════════════════════════════════════════
+  const lsClockDisplay = document.getElementById('lsClockDisplay');
+  const lsSongTitle    = document.getElementById('lsSongTitle');
+  const lsSongArtist   = document.getElementById('lsSongArtist');
+  const lsBtnPrev      = document.getElementById('lsBtnPrev');
+  const lsBtnPlay      = document.getElementById('lsBtnPlay');
+  const lsBtnNext      = document.getElementById('lsBtnNext');
+  const lsIconPlay     = document.getElementById('lsIconPlay');
+  const lsIconPause    = document.getElementById('lsIconPause');
+
+  // Sync landscape clock every second
+  function updateLsClock() {
+    if (!lsClockDisplay) return;
+    const now = new Date();
+    let h = now.getHours();
+    const m = now.getMinutes();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    lsClockDisplay.textContent =
+      String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ' ' + ampm;
+  }
+  updateLsClock();
+  setInterval(updateLsClock, 1000);
+
+  // Sync song info in landscape view
+  function updateLsSong(song) {
+    if (lsSongTitle)  lsSongTitle.textContent  = song.title  || '';
+    if (lsSongArtist) lsSongArtist.textContent = song.artist || '';
+  }
+  if (currentSong) updateLsSong(currentSong);
+
+  // Override onTrackChange to also update landscape song info
+  const _origOnTrackChange = player.onTrackChange.bind(player);
+  player.onTrackChange = (song) => {
+    _origOnTrackChange(song);
+    updateLsSong(song);
+  };
+
+  // Sync play/pause icon in landscape view
+  function syncLsPlayIcon() {
+    const playing = !player.audio.paused;
+    if (lsIconPlay)  lsIconPlay.style.display  = playing ? 'none'  : 'block';
+    if (lsIconPause) lsIconPause.style.display = playing ? 'block' : 'none';
+  }
+  player.audio.addEventListener('play',  syncLsPlayIcon);
+  player.audio.addEventListener('pause', syncLsPlayIcon);
+  syncLsPlayIcon();
+
+  // Wire up landscape buttons
+  if (lsBtnPrev) lsBtnPrev.addEventListener('click', () => player.playPrev());
+  if (lsBtnNext) lsBtnNext.addEventListener('click', () => player.playNext());
+  if (lsBtnPlay) lsBtnPlay.addEventListener('click', () => {
+    player.togglePlay();
+    syncLsPlayIcon();
+  });
 });
